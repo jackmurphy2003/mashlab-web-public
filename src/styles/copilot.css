@@ -1,0 +1,186 @@
+/* Copilot-specific styles */
+
+.chat-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.chat-clarifiers {
+  padding: 12px 12px 0;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+
+.chat-thread {
+  flex: 1 1 auto;
+  overflow: auto;
+  padding: 8px 12px;
+}
+
+.chat-composer {
+  position: sticky;
+  bottom: 0;
+  padding: 12px;
+  background: rgba(12, 16, 32, 0.8);
+  backdrop-filter: blur(6px);
+}
+
+/* Beaker animations */
+@keyframes bubble-float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+.beaker-bubble {
+  animation: bubble-float 2s ease-in-out infinite;
+}
+
+/* Setlist table hover effects */
+.setlist-row:hover {
+  background-color: rgba(122, 167, 255, 0.1) !important;
+}
+
+.setlist-row.selected {
+  background-color: rgba(122, 167, 255, 0.2) !important;
+  border-color: #7aa7ff !important;
+}
+
+/* Pool item hover effects */
+.pool-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(122, 167, 255, 0.2);
+}
+
+/* Chip animations */
+.clarifier-chip {
+  transition: all 0.2s ease;
+}
+
+.clarifier-chip:hover {
+  transform: scale(1.05);
+}
+
+.clarifier-chip.active {
+  box-shadow: 0 0 0 2px #7aa7ff, 0 0 0 4px rgba(122, 167, 255, 0.2);
+}
+
+/* Progress bar glow */
+.progress-bar {
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-bar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  animation: progress-shine 2s infinite;
+}
+
+@keyframes progress-shine {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+/* Source badge glow */
+.source-badge {
+  box-shadow: 0 0 8px rgba(0, 199, 242, 0.3);
+}
+
+/* Message bubble animations */
+.message-bubble {
+  animation: message-slide-in 0.3s ease-out;
+}
+
+@keyframes message-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Typing indicator */
+.typing-dots {
+  animation: typing-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes typing-pulse {
+  0%, 60%, 100% {
+    opacity: 0.4;
+  }
+  30% {
+    opacity: 1;
+  }
+}
+
+/* Filter panel scrollbar */
+.filter-panel::-webkit-scrollbar {
+  width: 6px;
+}
+
+.filter-panel::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 3px;
+}
+
+.filter-panel::-webkit-scrollbar-thumb {
+  background: rgba(122, 167, 255, 0.3);
+  border-radius: 3px;
+}
+
+.filter-panel::-webkit-scrollbar-thumb:hover {
+  background: rgba(122, 167, 255, 0.5);
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .copilot-layout {
+    flex-direction: column;
+  }
+  
+  .copilot-left,
+  .copilot-center,
+  .copilot-right {
+    width: 100% !important;
+    height: auto !important;
+  }
+  
+  .copilot-center {
+    order: -1;
+  }
+}
+
+/* Loading states */
+.loading-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}

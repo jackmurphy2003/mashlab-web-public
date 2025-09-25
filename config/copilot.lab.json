@@ -1,0 +1,174 @@
+{
+  "tabId": "copilot_lab",
+  "title": "Co-Pilot (Lab Mode)",
+  "version": "1.0.0",
+  "guards": {
+    "requiresSpotifyAuth": true,
+    "minAppVersion": "0.9.0"
+  },
+  "layout": {
+    "columns": [
+      { "id": "left", "width": "28%" },
+      { "id": "middle", "width": "44%" },
+      { "id": "right", "width": "28%" }
+    ],
+    "responsive": {
+      "breakpoints": {
+        "lg": 1200,
+        "md": 900,
+        "sm": 640
+      },
+      "stackOn": "md"
+    }
+  },
+  "unauthenticated": {
+    "headline": "Connect Spotify to activate Co-Pilot",
+    "bullets": [
+      "Generate mashup matches by key/BPM/energy",
+      "Instant A/B preview with audio features",
+      "Save sessions to Mashups or export"
+    ],
+    "cta": {
+      "label": "Login with Spotify",
+      "action": "auth.spotify.login"
+    },
+    "helpLink": "/docs/copilot"
+  },
+  "panels": {
+    "left": [
+      {
+        "type": "SeedSelector",
+        "id": "seed",
+        "title": "Seed",
+        "sources": ["track", "playlist", "artist"],
+        "placeholders": {
+          "track": "Search track…",
+          "playlist": "Search playlist…",
+          "artist": "Search artist…"
+        },
+        "showArtwork": true,
+        "allowMultiTrackSeed": false
+      },
+      {
+        "type": "BlendSettings",
+        "id": "blend",
+        "title": "Blend Settings",
+        "defaults": {
+          "bpmRange": [118, 132],
+          "keyMode": "compatible", 
+          "energyTarget": 0.7,
+          "danceabilityMin": 0.6,
+          "durationToleranceSec": 20,
+          "tempoShiftSemitones": 0
+        },
+        "controls": [
+          { "kind": "range", "id": "bpmRange", "min": 60, "max": 200, "step": 1, "label": "BPM Range" },
+          { "kind": "select", "id": "keyMode", "label": "Key", "options": [
+            { "label": "Exact", "value": "exact" },
+            { "label": "Compatible (Camelot +1/-1)", "value": "compatible" },
+            { "label": "Any", "value": "any" }
+          ]},
+          { "kind": "slider", "id": "energyTarget", "min": 0, "max": 1, "step": 0.05, "label": "Energy Target" },
+          { "kind": "slider", "id": "danceabilityMin", "min": 0, "max": 1, "step": 0.05, "label": "Min Danceability" },
+          { "kind": "number", "id": "durationToleranceSec", "min": 0, "max": 60, "step": 5, "label": "Duration Tolerance (sec)" }
+        ]
+      },
+      {
+        "type": "Filters",
+        "id": "filters",
+        "title": "Filters",
+        "fields": [
+          { "kind": "checkbox", "id": "excludeExplicit", "label": "Exclude explicit", "default": false },
+          { "kind": "range", "id": "releaseYear", "label": "Release year", "min": 1970, "max": 2025, "step": 1, "default": [2000, 2025] },
+          { "kind": "range", "id": "popularity", "label": "Popularity", "min": 0, "max": 100, "step": 1, "default": [40, 100] }
+        ],
+        "advancedDisclosure": true
+      },
+      {
+        "type": "PrimaryActions",
+        "id": "actions",
+        "buttons": [
+          { "id": "generate", "label": "Generate Matches", "style": "primary", "hotkey": "g" },
+          { "id": "clear", "label": "Clear", "style": "ghost" }
+        ]
+      }
+    ],
+    "middle": [
+      {
+        "type": "ResultsTable",
+        "id": "results",
+        "title": "Recommendations",
+        "emptyText": "No results yet — choose a seed and Generate.",
+        "columns": [
+          { "id": "art", "label": "", "type": "artwork", "width": 40 },
+          { "id": "title", "label": "Title", "width": 220 },
+          { "id": "artist", "label": "Artist", "width": 180 },
+          { "id": "bpm", "label": "BPM", "width": 70, "align": "right" },
+          { "id": "key", "label": "Key", "width": 70, "align": "center" },
+          { "id": "energy", "label": "Energy", "width": 90, "type": "bar" },
+          { "id": "danceability", "label": "Dance", "width": 90, "type": "bar" },
+          { "id": "score", "label": "Match", "width": 90, "type": "score" },
+          { "id": "actions", "label": "", "width": 120, "type": "rowActions" }
+        ],
+        "rowActions": [
+          { "id": "previewA", "label": "Preview A", "icon": "play" },
+          { "id": "previewB", "label": "Preview B", "icon": "play" },
+          { "id": "addToQueue", "label": "Add", "icon": "plus" }
+        ],
+        "sortable": ["bpm", "energy", "danceability", "score"],
+        "pageSize": 25
+      }
+    ],
+    "right": [
+      {
+        "type": "PreviewDeck",
+        "id": "deck",
+        "title": "A/B Preview",
+        "features": {
+          "syncByBPM": true,
+          "keyShift": true,
+          "trimInOut": true,
+          "loopBars": [4, 8, 16]
+        }
+      },
+      {
+        "type": "SessionQueue",
+        "id": "queue",
+        "title": "Session Queue",
+        "rowActions": [
+          { "id": "up", "label": "Up" },
+          { "id": "down", "label": "Down" },
+          { "id": "remove", "label": "Remove", "danger": true }
+        ]
+      },
+      {
+        "type": "ExportBlock",
+        "id": "export",
+        "title": "Save / Export",
+        "buttons": [
+          { "id": "saveSession", "label": "Save to Mashups", "style": "primary" },
+          { "id": "exportCSV", "label": "Export CSV" }
+        ]
+      }
+    ]
+  },
+  "scoring": {
+    "weights": {
+      "bpmDistance": 0.35,
+      "keyCompatibility": 0.35,
+      "energyDistance": 0.20,
+      "danceability": 0.10
+    },
+    "keyCompatibilityMap": {
+      "exact": 1.0,
+      "relative": 0.85,
+      "camelotAdjacent": 0.8,
+      "any": 0.5
+    },
+    "maxBpmDelta": 6
+  },
+  "telemetry": {
+    "category": "copilot_lab",
+    "events": ["auth_success", "generate", "preview", "add_to_queue", "save_session", "export_csv"]
+  }
+}

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify Authentication</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0C1022;
+            color: #E8EDFF;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            padding: 2rem;
+        }
+        .spinner {
+            border: 3px solid #1A2348;
+            border-top: 3px solid #8A7CFF;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="spinner"></div>
+        <h2>Completing Spotify Authentication...</h2>
+        <p>Please wait while we complete your login.</p>
+    </div>
+    <script>
+        // Handle the OAuth callback
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+        const error = urlParams.get('error');
+        
+        if (error) {
+            // Authentication failed
+            window.location.href = 'http://localhost:3000/?auth=error';
+        } else if (code) {
+            // Exchange code for token
+            const params = new URLSearchParams();
+            params.append('code', code);
+            if (urlParams.get('state')) {
+                params.append('state', urlParams.get('state'));
+            }
+            
+            fetch('http://localhost:3001/api/auth/spotify/callback?' + params.toString())
+                .then(response => {
+                    if (response.ok) {
+                        // Redirect to the React app on port 3000
+                        window.location.href = 'http://localhost:3000/?auth=success';
+                    } else {
+                        window.location.href = 'http://localhost:3000/?auth=error';
+                    }
+                })
+                .catch(() => {
+                    window.location.href = 'http://localhost:3000/?auth=error';
+                });
+        } else {
+            // No code or error, redirect to home
+            window.location.href = 'http://localhost:3000/';
+        }
+    </script>
+</body>
+</html>
