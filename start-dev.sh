@@ -41,9 +41,9 @@ echo "🌐 Starting React development server on port 3000..."
 # Use a different port if 3000 is busy
 if lsof -Pi :3000 -sTCP:LISTEN -t >/dev/null ; then
     echo "⚠️  Port 3000 is busy, using port 3002..."
-    PORT=3002 npm start &
+    PORT=3002 npm run dev &
 else
-    npm start &
+    npm run dev &
 fi
 FRONTEND_PID=$!
 

@@ -26,8 +26,6 @@ function BrandLockup({ onTabChange }: { onTabChange: (tab: "search" | "library" 
   );
 }
 
-
-
 type NavigationProps = {
   activeTab: "search" | "library" | "mashups" | "copilot";
   onTabChange: (tab: "search" | "library" | "mashups" | "copilot") => void;
@@ -52,7 +50,10 @@ export default function Navigation({ activeTab, onTabChange }: NavigationProps) 
           return (
             <button
               key={n.href}
-              onClick={() => onTabChange(tabKey)}
+              onClick={() => {
+                console.log('🎯 CLICKING TAB:', tabKey);
+                onTabChange(tabKey);
+              }}
               className={`relative text-[15px] font-medium ${
                 active ? "text-[#E8EDFF]" : "text-[#96A0C2] hover:text-[#E8EDFF]"
               }`}
